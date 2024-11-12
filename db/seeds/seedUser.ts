@@ -16,16 +16,22 @@ export const seedUsers = async () => {
 
   // Generate dummy data for users
   const data = Array.from({ length: 20 }, () => ({
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
     username: faker.internet.username(),
     hashedPassword: faker.internet.password(),
     email: faker.internet.email(),
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
     phone: faker.string.numeric(10),
+    secondaryPhone: faker.string.numeric(10),
     address: faker.location.streetAddress(),
     city: faker.location.city(),
     state: faker.location.state({ abbreviated: true }),
     zip: faker.location.zipCode("#####"),
+    notes: faker.lorem.paragraph(),
+    servicesInterested: faker.lorem.words(3).split(" "),
+    currentProviders: faker.lorem.words(3).split(" "),
+    points: faker.number.int(100),
+    profileImage: faker.image.avatar(),
   }));
 
   console.log("Seeding users...");

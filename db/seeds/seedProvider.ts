@@ -17,9 +17,9 @@ export const seedProviders = async () => {
   // Generate dummy data for providers
   const data = Array.from({ length: 10 }, () => ({
     businessName: faker.company.name(),
-    email: faker.internet.email(),
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
+    email: faker.internet.email(),
     phone: faker.string.numeric(10),
     address: faker.location.streetAddress(),
     city: faker.location.city(),
@@ -29,7 +29,11 @@ export const seedProviders = async () => {
       faker.location.zipCode("#####"),
       faker.location.zipCode("#####"),
     ],
-    availableHours: JSON.stringify({ start: "08:00", end: "17:00" }),
+    availableHours: ["08:00", "17:00"],
+    services: ["lawncare", "hedge-trim", "tree-trim"],
+    profileImage: faker.image.avatar(),
+    logoImage: faker.image.url(),
+    showcaseImages: [faker.image.url(), faker.image.url()],
   }));
 
   console.log("Seeding providers...");
