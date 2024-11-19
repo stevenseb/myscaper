@@ -1,10 +1,11 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
-import { jobs, providers, users } from "../schema";
+import pkg from "pg";
+const { Pool } = pkg;
+import { jobs, providers, users } from "../schema.js";
 import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
 
-dotenv.config({ path: "./.env.development" });
+dotenv.config({ path: "../.env.local" });
 
 export const seedJobs = async () => {
   const client = new Pool({
@@ -37,8 +38,8 @@ export const seedJobs = async () => {
     quoteImages: [faker.image.url(), faker.image.url()],
     beforeImage: faker.image.url(),
     afterImage: faker.image.url(),
-    providerID: Number(faker.helpers.arrayElement(providerIds).id),
-    userID: Number(faker.helpers.arrayElement(userIds).id),
+    providerID: faker.helpers.arrayElement(providerIds).id.toString(),
+    userID: faker.helpers.arrayElement(userIds).id.toString(),
   }));
 
   console.log("Seeding jobs...");

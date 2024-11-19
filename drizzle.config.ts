@@ -1,19 +1,20 @@
-// drizzle.config.ts
+import type { Config } from "drizzle-kit";
+import * as dotenv from "dotenv";
 
-import type { Config } from "drizzle-kit"; // Import the type for Config
-import * as dotenv from "dotenv"; // Import dotenv to load environment variables
+dotenv.config({ path: ".env.local" });
 
-dotenv.config(); // Load environment variables from .env file
+const isProduction = process.env.NODE_ENV === "production";
 
 export default {
-  schema: "./db/schema.ts", // Path to your schema definition file
-  out: "./db/migrations", // Output folder for migrations
-  dialect: "postgresql", // Specify PostgreSQL as the dialect (not driver)
+  schema: "./db/schema.ts",
+  out: "./db/migrations",
+  dialect: "postgresql",
   dbCredentials: {
-    host: process.env.POSTGRES_HOST as string,
-    port: parseInt(process.env.POSTGRES_PORT as string, 10),
-    user: process.env.POSTGRES_USER as string,
-    password: process.env.POSTGRES_PASSWORD as string,
-    database: process.env.POSTGRES_DB as string,
+    host: process.env.DB_HOST || "localhost",
+    port: Number(process.env.DB_PORT) || 5432,
+    user: process.env.DB_USER || "postgres",
+    password: process.env.DB_PASSWORD || "",
+    database: process.env.DB_NAME || "",
+    ssl: isProduction ? { rejectUnauthorized: false } : false,
   },
-} satisfies Config; // Ensure the object satisfies the Config type
+} satisfies Config;

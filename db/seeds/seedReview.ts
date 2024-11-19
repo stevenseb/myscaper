@@ -1,10 +1,11 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
-import { reviews, providers } from "../schema";
+import pkg from "pg";
+const { Pool } = pkg;
+import { reviews, providers } from "../schema.js";
 import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
 
-dotenv.config({ path: "./.env.development" });
+dotenv.config({ path: "../.env.local" });
 
 export const seedReviews = async () => {
   const client = new Pool({
@@ -20,7 +21,7 @@ export const seedReviews = async () => {
   const data = Array.from({ length: 40 }, () => ({
     rating: faker.number.int({ min: 1, max: 5 }),
     content: faker.lorem.paragraph(),
-    providerID: Number(faker.helpers.arrayElement(providerIds).id),
+    providerID: faker.helpers.arrayElement(providerIds).id.toString(),
   }));
 
   console.log("Seeding reviews...");

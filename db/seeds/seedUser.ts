@@ -1,15 +1,16 @@
 // db/seeds/seedUser.ts
 import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
-import { users } from "../schema"; // Import users schema
+import pkg from "pg";
+const { Pool } = pkg;
+import { users } from "../schema.js";
 import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
 
-dotenv.config({ path: "./.env.development" });
-
+dotenv.config({ path: "../../.env.local" });
+console.log(process.env.DATABASE_URL);
 export const seedUsers = async () => {
   const client = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: "postgres://postgres:postgres@localhost:5432/myscaper_db",
   });
 
   const db = drizzle(client);

@@ -1,11 +1,12 @@
 // src/db/seeds/seedProvider.ts
 import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
-import { providers } from "../schema"; // Import providers schema
+import pkg from "pg";
+const { Pool } = pkg;
+import { providers } from "../schema.js";
 import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
 
-dotenv.config({ path: "./.env.development" });
+dotenv.config({ path: "../../.env.local" });
 
 export const seedProviders = async () => {
   const client = new Pool({

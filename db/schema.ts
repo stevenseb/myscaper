@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   pgTable,
   text,
@@ -8,6 +9,7 @@ import {
   pgEnum,
   uuid,
   timestamp,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 
 // Define the PostgreSQL table schema for users
@@ -26,12 +28,17 @@ export const users = pgTable("users", {
   zip: varchar("zip", { length: 5 }).notNull(),
   notes: text("notes"),
   servicesInterested: text("services_interested").array(),
-  currentProviders: text("current_providers").array(),
   points: integer("points").default(0).notNull(),
   profileImage: text("profile_image"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+export const usersRelations = relations(users, ({ many }) => ({
+  userProviderConnections: many(userProviderConnections),
+  jobs: many(jobs),
+  messages: many(messages),
+}));
 
 // Define the PostgreSQL table schema for providers
 export const providers = pgTable("providers", {
@@ -55,6 +62,46 @@ export const providers = pgTable("providers", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const providersRelations = relations(providers, ({ many }) => ({
+  userProviderConnections: many(userProviderConnections),
+  jobs: many(jobs),
+  messages: many(messages),
+  reviews: many(reviews),
+  posts: many(posts),
+}));
+
+// Connected users and providers table
+export const userProviderConnections = pgTable(
+  "user_provider_connections",
+  {
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id),
+    providerId: uuid("provider_id")
+      .notNull()
+      .references(() => providers.id),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.userId, t.providerId] }),
+  })
+);
+
+export const userProviderConnectionsRelations = relations(
+  userProviderConnections,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [userProviderConnections.userId],
+      references: [users.id],
+    }),
+    provider: one(providers, {
+      fields: [userProviderConnections.providerId],
+      references: [providers.id],
+    }),
+  })
+);
+
 // Define the status enum
 const jobStatusEnum = pgEnum("job_status", [
   "pending",
@@ -76,38 +123,73 @@ export const jobs = pgTable("jobs", {
   quoteImages: text("quote_images").array(),
   beforeImage: text("before_image"),
   afterImage: text("after_image"),
-  providerID: integer("provider_id")
+  providerID: uuid("provider_id")
     .notNull()
     .references(() => providers.id),
-  userID: integer("user_id")
+  userID: uuid("user_id")
     .notNull()
     .references(() => users.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const jobsRelations = relations(jobs, ({ one }) => ({
+  provider: one(providers, {
+    fields: [jobs.providerID],
+    references: [providers.id],
+  }),
+  user: one(users, {
+    fields: [jobs.userID],
+    references: [users.id],
+  }),
+}));
+
 // Message table
 export const messages = pgTable("messages", {
   id: uuid("id").defaultRandom().primaryKey(),
-  sender: integer("sender").notNull(),
-  recipient: integer("recipient").notNull(),
+  providerID: uuid("provider_id")
+    .notNull()
+    .references(() => providers.id),
+  userID: uuid("user_id")
+    .notNull()
+    .references(() => users.id),
   content: text("content").notNull(),
+  isFromProvider: boolean("is_from_provider").notNull(),
   images: text("images").array(),
+  files: text("files").array(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+export const messagesRelations = relations(messages, ({ one }) => ({
+  provider: one(providers, {
+    fields: [messages.providerID],
+    references: [providers.id],
+  }),
+  user: one(users, {
+    fields: [messages.userID],
+    references: [users.id],
+  }),
+}));
 
 // Reviews table
 export const reviews = pgTable("reviews", {
   id: uuid("id").defaultRandom().primaryKey(),
   rating: integer("rating").notNull(),
   content: text("content").notNull(),
-  providerID: integer("provider_id")
+  providerID: uuid("provider_id")
     .notNull()
     .references(() => providers.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+export const reviewsRelations = relations(reviews, ({ one }) => ({
+  provider: one(providers, {
+    fields: [reviews.providerID],
+    references: [providers.id],
+  }),
+}));
 
 // Posts table
 export const posts = pgTable("posts", {
@@ -116,9 +198,16 @@ export const posts = pgTable("posts", {
   content: text("content").notNull(),
   images: text("images").array(),
   upvotes: integer("upvotes").default(0).notNull(),
-  providerID: integer("provider_id")
+  providerID: uuid("provider_id")
     .notNull()
     .references(() => providers.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+export const postsRelations = relations(posts, ({ one }) => ({
+  provider: one(providers, {
+    fields: [posts.providerID],
+    references: [providers.id],
+  }),
+}));
