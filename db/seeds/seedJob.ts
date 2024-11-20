@@ -5,7 +5,7 @@ import { jobs, providers, users } from "../schema.js";
 import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
 
-dotenv.config({ path: "../.env.local" });
+dotenv.config({ path: ".env.local" });
 
 export const seedJobs = async () => {
   const client = new Pool({

@@ -5,7 +5,7 @@ import { users, providers, userProviderConnections } from "../schema.js";
 import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
 
-dotenv.config({ path: "../.env.local" });
+dotenv.config({ path: ".env.local" });
 
 export const seedUserProviderConnections = async () => {
   const client = new Pool({
