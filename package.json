@@ -13,6 +13,7 @@
   "dependencies": {
     "@faker-js/faker": "^9.2.0",
     "@radix-ui/themes": "^3.1.5",
+    "bcrypt": "^5.1.1",
     "docker-compose": "^1.1.0",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.36.1",
@@ -23,6 +24,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "^20",
     "@types/pg": "^8.11.10",
     "@types/react": "^18",

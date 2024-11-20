@@ -1,46 +1,3 @@
-CREATE TABLE IF NOT EXISTS "users" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"first_name" text NOT NULL,
-	"last_name" text NOT NULL,
-	"username" text NOT NULL,
-	"hashed_password" text NOT NULL,
-	"email" text NOT NULL,
-	"phone" varchar(10) NOT NULL,
-	"secondary_phone" varchar(10),
-	"address" text NOT NULL,
-	"city" text NOT NULL,
-	"state" varchar(2) NOT NULL,
-	"zip" varchar(5) NOT NULL,
-	"notes" text,
-	"services_interested" text[],
-	"points" integer DEFAULT 0 NOT NULL,
-	"profile_image" text,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
-);--> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "providers" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"business_name" text NOT NULL,
-	"first_name" text NOT NULL,
-	"last_name" text NOT NULL,
-	"email" text NOT NULL,
-	"phone" varchar(10) NOT NULL,
-	"address" text NOT NULL,
-	"city" text NOT NULL,
-	"state" varchar(2) NOT NULL,
-	"zip" varchar(5) NOT NULL,
-	"services" text[] NOT NULL,
-	"service_area" varchar(5)[] NOT NULL,
-	"available_hours" text[] NOT NULL,
-	"profile_image" text,
-	"logo_image" text,
-	"showcase_images" text[],
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
-);
---> statement-breakpoint
-CREATE TYPE "job_status" AS ENUM ('pending', 'scheduled', 'completed', 'cancelled');
---> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "jobs" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"date_requested" date NOT NULL,
@@ -82,6 +39,27 @@ CREATE TABLE IF NOT EXISTS "posts" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "providers" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"business_name" text NOT NULL,
+	"first_name" text NOT NULL,
+	"last_name" text NOT NULL,
+	"email" text NOT NULL,
+	"phone" varchar(10) NOT NULL,
+	"address" text NOT NULL,
+	"city" text NOT NULL,
+	"state" varchar(2) NOT NULL,
+	"zip" varchar(5) NOT NULL,
+	"services" text[] NOT NULL,
+	"service_area" varchar(5)[] NOT NULL,
+	"available_hours" text[] NOT NULL,
+	"profile_image" text,
+	"logo_image" text,
+	"showcase_images" text[],
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "reviews" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"rating" integer NOT NULL,
@@ -97,6 +75,27 @@ CREATE TABLE IF NOT EXISTS "user_provider_connections" (
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "user_provider_connections_user_id_provider_id_pk" PRIMARY KEY("user_id","provider_id")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "users" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"first_name" text NOT NULL,
+	"last_name" text NOT NULL,
+	"username" text NOT NULL,
+	"hashed_password" text NOT NULL,
+	"email" text NOT NULL,
+	"phone" varchar(10) NOT NULL,
+	"secondary_phone" varchar(10),
+	"address" text NOT NULL,
+	"city" text NOT NULL,
+	"state" varchar(2) NOT NULL,
+	"zip" varchar(5) NOT NULL,
+	"notes" text,
+	"services_interested" text[],
+	"points" integer DEFAULT 0 NOT NULL,
+	"profile_image" text,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 DO $$ BEGIN

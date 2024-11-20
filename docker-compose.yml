@@ -12,5 +12,14 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: myscaper_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com # Set your email here
+      PGADMIN_DEFAULT_PASSWORD: admin # Set your password here
+    ports:
+      - "8080:80" # Expose pgAdmin on port 8080
+
 volumes:
   postgres_data:

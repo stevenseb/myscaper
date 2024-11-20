@@ -5,7 +5,7 @@ import { reviews, providers } from "../schema.js";
 import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
 
-dotenv.config({ path: "../.env.local" });
+dotenv.config({ path: ".env.local" });
 
 export const seedReviews = async () => {
   const client = new Pool({
